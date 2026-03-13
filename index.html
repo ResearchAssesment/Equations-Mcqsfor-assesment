@@ -492,82 +492,58 @@
 
 </div>
 
-<script>
-    // --- بداية كود الإحصائيات ---
-    
-    // الرابط السري الخاص بك لاستقبال الإجابات
+    // الرابط اللي اشتغل معاك في التيست
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwMrE2X6Ykg5BNTaxq2izbJ-FTj39jFlzronDt_ZIvQYtlZBi-kMBYlQu3aNM2ovFtCFQ/exec';
     
-    // إنشاء كود زيارة فريد لكل طالب يفتح الصفحة
+    // كود عشوائي لكل طالب
     const sessionId = 'User_' + Math.floor(Math.random() * 1000000);
 
-        function sendAnswerData(qNum, status) {
+    function sendAnswerData(qNum, status) {
         if (!scriptURL) return; 
         
-        // تحويل البيانات إلى روابط (GET) لضمان مرورها من حماية المتصفح
-        const finalURL = `${scriptURL}?sessionId=${sessionId}&questionNum=${qNum}&status=${status}`;
+        // إضافة timestamp (t) عشان الموبايل ميفكرش إنها إشارة قديمة ويبلكها
+        const timestamp = new Date().getTime();
+        const finalURL = `${scriptURL}?sessionId=${sessionId}&questionNum=${qNum}&status=${encodeURIComponent(status)}&t=${timestamp}`;
         
-        fetch(finalURL, { mode: 'no-cors' })
-            .catch(error => console.error('Error!', error));
+        // إرسال هادي في الخلفية
+        fetch(finalURL, { mode: 'no-cors' }).catch(err => console.log(err));
     }
 
-    // --- نهاية كود الإحصائيات ---
-
+    // كود التعامل مع الضغط على الاختيارات
     const allOptions = document.querySelectorAll('.options li');
-
     allOptions.forEach(option => {
         option.addEventListener('click', function() {
             const parentList = this.parentElement;
-            
-            if (parentList.classList.contains('answered')) {
-                parentList.classList.remove('answered');
-                const children = parentList.querySelectorAll('li');
-                children.forEach(child => {
-                    child.classList.remove('correct');
-                    child.classList.remove('wrong');
-                });
-            } else {
-                parentList.classList.add('answered');
-                
-                // تحديد رقم السؤال
-                const allCards = Array.from(document.querySelectorAll('.mcq-card'));
-                const currentCard = this.closest('.mcq-card');
-                const qNumber = allCards.indexOf(currentCard) + 1;
-                
-                let answerStatus = '';
+            if (parentList.classList.contains('answered')) return; // منع تغيير الإجابة
 
-                if (this.classList.contains('correct-answer')) {
-                    this.classList.add('correct');
-                    answerStatus = 'صح';
-                } else {
-                    this.classList.add('wrong');
-                    answerStatus = 'خطأ';
-                    const correctAnswer = parentList.querySelector('.correct-answer');
-                    if (correctAnswer) {
-                        correctAnswer.classList.add('correct');
-                    }
-                }
-                
-                // إرسال البيانات لجوجل
-                sendAnswerData(qNumber, answerStatus);
+            parentList.classList.add('answered');
+            const allCards = Array.from(document.querySelectorAll('.mcq-card'));
+            const currentCard = this.closest('.mcq-card');
+            const qNumber = allCards.indexOf(currentCard) + 1;
+            
+            let answerStatus = '';
+            if (this.classList.contains('correct-answer')) {
+                this.classList.add('correct');
+                answerStatus = 'صح';
+            } else {
+                this.classList.add('wrong');
+                answerStatus = 'خطأ';
+                const correctAnswer = parentList.querySelector('.correct-answer');
+                if (correctAnswer) correctAnswer.classList.add('correct');
             }
+            
+            // إرسال النتيجة فوراً
+            sendAnswerData(qNumber, answerStatus);
         });
     });
 
+    // كود إظهار الحل
     function toggleSolution(id, btnElement) {
         const solutionBox = document.getElementById(id);
-        
-        if (solutionBox.classList.contains('active')) {
-            solutionBox.classList.remove('active');
-            btnElement.textContent = 'Show Answer';
-            btnElement.style.backgroundColor = '#596A7A';
-        } else {
-            solutionBox.classList.add('active');
-            btnElement.textContent = 'Hide Answer';
-            btnElement.style.backgroundColor = '#2C3E50';
-        }
+        solutionBox.classList.toggle('active');
+        btnElement.textContent = solutionBox.classList.contains('active') ? 'Hide Answer' : 'Show Answer';
     }
-</script>
+
 
 </body>
 </html>
