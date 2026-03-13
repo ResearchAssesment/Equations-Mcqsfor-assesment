@@ -493,6 +493,30 @@
 </div>
 
 <script>
+    // --- بداية كود الإحصائيات ---
+    
+    // الرابط السري الخاص بك لاستقبال الإجابات
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMrE2X6Ykg5BNTaxq2izbJ-FTj39jFlzronDt_ZIvQYtlZBi-kMBYlQu3aNM2ovFtCFQ/exec';
+    
+    // إنشاء كود زيارة فريد لكل طالب يفتح الصفحة
+    const sessionId = 'User_' + Math.floor(Math.random() * 1000000);
+
+    function sendAnswerData(qNum, status) {
+        if (!scriptURL) return; 
+        
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                sessionId: sessionId,
+                questionNum: qNum,
+                status: status
+            })
+        }).catch(error => console.error('Error!', error.message));
+    }
+    // --- نهاية كود الإحصائيات ---
+
     const allOptions = document.querySelectorAll('.options li');
 
     allOptions.forEach(option => {
@@ -508,15 +532,28 @@
                 });
             } else {
                 parentList.classList.add('answered');
+                
+                // تحديد رقم السؤال
+                const allCards = Array.from(document.querySelectorAll('.mcq-card'));
+                const currentCard = this.closest('.mcq-card');
+                const qNumber = allCards.indexOf(currentCard) + 1;
+                
+                let answerStatus = '';
+
                 if (this.classList.contains('correct-answer')) {
                     this.classList.add('correct');
+                    answerStatus = 'صح';
                 } else {
                     this.classList.add('wrong');
+                    answerStatus = 'خطأ';
                     const correctAnswer = parentList.querySelector('.correct-answer');
                     if (correctAnswer) {
                         correctAnswer.classList.add('correct');
                     }
                 }
+                
+                // إرسال البيانات لجوجل
+                sendAnswerData(qNumber, answerStatus);
             }
         });
     });
