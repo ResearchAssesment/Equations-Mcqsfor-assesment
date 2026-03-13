@@ -492,57 +492,7 @@
 
 </div>
 
-    // الرابط اللي اشتغل معاك في التيست
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMrE2X6Ykg5BNTaxq2izbJ-FTj39jFlzronDt_ZIvQYtlZBi-kMBYlQu3aNM2ovFtCFQ/exec';
     
-    // كود عشوائي لكل طالب
-    const sessionId = 'User_' + Math.floor(Math.random() * 1000000);
-
-    function sendAnswerData(qNum, status) {
-        if (!scriptURL) return; 
-        
-        // إضافة timestamp (t) عشان الموبايل ميفكرش إنها إشارة قديمة ويبلكها
-        const timestamp = new Date().getTime();
-        const finalURL = `${scriptURL}?sessionId=${sessionId}&questionNum=${qNum}&status=${encodeURIComponent(status)}&t=${timestamp}`;
-        
-        // إرسال هادي في الخلفية
-        fetch(finalURL, { mode: 'no-cors' }).catch(err => console.log(err));
-    }
-
-    // كود التعامل مع الضغط على الاختيارات
-    const allOptions = document.querySelectorAll('.options li');
-    allOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const parentList = this.parentElement;
-            if (parentList.classList.contains('answered')) return; // منع تغيير الإجابة
-
-            parentList.classList.add('answered');
-            const allCards = Array.from(document.querySelectorAll('.mcq-card'));
-            const currentCard = this.closest('.mcq-card');
-            const qNumber = allCards.indexOf(currentCard) + 1;
-            
-            let answerStatus = '';
-            if (this.classList.contains('correct-answer')) {
-                this.classList.add('correct');
-                answerStatus = 'صح';
-            } else {
-                this.classList.add('wrong');
-                answerStatus = 'خطأ';
-                const correctAnswer = parentList.querySelector('.correct-answer');
-                if (correctAnswer) correctAnswer.classList.add('correct');
-            }
-            
-            // إرسال النتيجة فوراً
-            sendAnswerData(qNumber, answerStatus);
-        });
-    });
-
-    // كود إظهار الحل
-    function toggleSolution(id, btnElement) {
-        const solutionBox = document.getElementById(id);
-        solutionBox.classList.toggle('active');
-        btnElement.textContent = solutionBox.classList.contains('active') ? 'Hide Answer' : 'Show Answer';
-    }
 
 
 </body>
