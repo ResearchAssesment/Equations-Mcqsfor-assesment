@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epidemiology Practical MCQs</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #F4F7F6;
+            --card-bg: #FFFFFF;
+            --text-main: #2C3E50;
+            --text-muted: #596A7A;
+            --primary-color: #4A90E2;
+            --primary-hover: #357ABD;
+            --correct-bg: #E8F8F5;
+            --correct-border: #27AE60;
+            --correct-text: #1E8449;
+            --wrong-bg: #FDEDEC;
+            --wrong-border: #E74C3C;
+            --wrong-text: #C0392B;
+            --solution-bg: #F8F9FA;
+            --solution-border: #4A90E2;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .mcq-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .study-type {
+            display: inline-block;
+            background-color: #EAF2F8;
+            color: var(--primary-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #E4E8F0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: #F9FAFC;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .options li {
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background-color: #F9FAFC;
+            border: 1px solid #E4E8F0;
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .options:not(.answered) li:hover {
+            background-color: #EAF2F8;
+            border-color: var(--primary-color);
+        }
+
+        .options li.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
+            font-weight: 600;
+        }
+
+        .options li.correct::after {
+            content: '✓';
+            position: absolute;
+            right: 16px;
+            color: var(--correct-border);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .options li.wrong {
+            background-color: var(--wrong-bg);
+            border-color: var(--wrong-border);
+            color: var(--wrong-text);
+            font-weight: 600;
+        }
+
+        .options li.wrong::after {
+            content: '✗';
+            position: absolute;
+            right: 16px;
+            color: var(--wrong-border);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .btn-solution {
+            background-color: #596A7A;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-solution:hover {
+            background-color: #2C3E50;
+        }
+
+        .solution-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--solution-bg);
+            border: 1px solid var(--solution-border);
+            border-radius: 8px;
+            border-left: 4px solid var(--solution-border);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .solution-box.active {
+            display: block;
+        }
+
+        .formula {
+            background-color: #FFFFFF;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 15px 0;
+            border: 1px dashed var(--primary-color);
+        }
+
+        .explanation {
+            font-size: 14px;
+            color: #2C3E50;
+        }
+
+        .explanation strong {
+            color: var(--primary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Epidemiology Equations: Practice MCQs</h1>
+        <p>Attempt the question by clicking an option. If you are stuck, click "Show Answer".</p>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Cross-sectional Study</span>
+        <div class="question">
+            1. A cross-sectional study was conducted to assess the burden of asthma. Out of 2,000 individuals screened at a specific point in time (snapshot), 150 were found to be currently suffering from the disease. What is the prevalence of the disease?
+        </div>
+        <ul class="options">
+            <li>a) 15.0%</li>
+            <li class="correct-answer">b) 7.5%</li>
+            <li>c) 13.3%</li>
+            <li>d) 0.075%</li>
+            <li>e) 1.5%</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol1', this)">Show Answer</button>
+        
+        <div id="sol1" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                A cross-sectional study measures exposure and outcome at the same time. Therefore, it is used to measure <strong>Prevalence of disease</strong> (existing cases).
+            </div>
+            <div class="formula">
+                Prevalence of disease = (Cases / Total population) &times; 100
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                Cases = 150<br>
+                Total Population = 2,000<br>
+                Prevalence = (150 / 2000) &times; 100 = <strong>7.5%</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Cross-sectional Study</span>
+        <div class="question">
+            2. In the same cross-sectional study of 2,000 individuals, participants were surveyed about their habits. 400 individuals reported being current smokers. What is the prevalence of exposure?
+        </div>
+        <ul class="options">
+            <li>a) 15%</li>
+            <li class="correct-answer">b) 20%</li>
+            <li>c) 25%</li>
+            <li>d) 30%</li>
+            <li>e) 40%</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol2', this)">Show Answer</button>
+        
+        <div id="sol2" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                Cross-sectional studies also measure the proportion of the population exposed to a certain risk factor at that specific snapshot in time.
+            </div>
+            <div class="formula">
+                Prevalence of exposure = (Exposed / Total population) &times; 100
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                Exposed individuals = 400<br>
+                Total Population = 2,000<br>
+                Prevalence of exposure = (400 / 2000) &times; 100 = <strong>20%</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Cohort Study</span>
+        <div class="question">
+            3. A prospective cohort study follows a group of 5,000 healthy, disease-free individuals. After a 5-year follow-up period, 250 new cases of diabetes are diagnosed. Calculate the incidence of the disease.
+        </div>
+        <ul class="options">
+            <li>a) 50%</li>
+            <li>b) 20%</li>
+            <li class="correct-answer">c) 5%</li>
+            <li>d) 0.5%</li>
+            <li>e) 2.5%</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol3', this)">Show Answer</button>
+        
+        <div id="sol3" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                A cohort study follows a disease-free population over time to see who develops the disease. It measures <strong>Incidence</strong> (new cases over a period).
+            </div>
+            <div class="formula">
+                Incidence of disease = (New cases / Population at risk) &times; 100
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                New Cases = 250<br>
+                Population at risk = 5,000<br>
+                Incidence = (250 / 5000) &times; 100 = <strong>5%</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Cohort Study</span>
+        <div class="question">
+            4. In a cohort study investigating the effect of air pollution on lung disease, the results showed that the incidence of lung disease among the exposed group was 20%, while the incidence among the non-exposed group was 2%. Calculate the Relative Risk (RR).
+        </div>
+        <ul class="options">
+            <li>a) 0.1</li>
+            <li>b) 18</li>
+            <li>c) 22</li>
+            <li class="correct-answer">d) 10</li>
+            <li>e) 40</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol4', this)">Show Answer</button>
+        
+        <div id="sol4" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                The primary measure of association in an observational cohort study is the <strong>Relative Risk (RR)</strong>. It compares disease incidence in the exposed vs. non-exposed.
+            </div>
+            <div class="formula">
+                Relative Risk (RR) = Incidence in exposed / Incidence in non-exposed
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                Incidence in exposed = 20%<br>
+                Incidence in non-exposed = 2%<br>
+                RR = 20 / 2 = <strong>10</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Case-Control Study</span>
+        <div class="question">
+            5. A case-control study compared patients with uterine cancer (Cases) to healthy individuals (Controls) and asked about past Tamoxifen use. Based on the data below, calculate the Odds Ratio (OR):
+            <table class="data-table">
+                <tr>
+                    <th></th>
+                    <th>Uterine Cancer (Cases)</th>
+                    <th>No Cancer (Controls)</th>
+                </tr>
+                <tr>
+                    <th>Took Tamoxifen (Exposed)</th>
+                    <td>139 (a)</td>
+                    <td>58 (b)</td>
+                </tr>
+                <tr>
+                    <th>Did NOT take (Non-Exposed)</th>
+                    <td>550 (c)</td>
+                    <td>953 (d)</td>
+                </tr>
+            </table>
+        </div>
+        <ul class="options">
+            <li>a) 1.50</li>
+            <li>b) 2.40</li>
+            <li class="correct-answer">c) 4.15</li>
+            <li>d) 0.24</li>
+            <li>e) 10.60</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol5', this)">Show Answer</button>
+        
+        <div id="sol5" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                A case-control study starts with the disease and looks backward (retrospectively). We estimate risk using the <strong>Odds Ratio (OR)</strong>.
+            </div>
+            <div class="formula">
+                Odds Ratio (OR) = (a &times; d) / (b &times; c)
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                OR = (139 &times; 953) / (58 &times; 550)<br>
+                OR = 132,467 / 31,900 = <strong>4.15</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Clinical Trial</span>
+        <div class="question">
+            6. A randomized controlled trial tested a new vaccine. The incidence of the disease in the treatment group (receiving the vaccine) was 2%. The incidence in the control group (receiving a placebo) was 10%. Calculate the Relative Risk (RR) in this interventional study.
+        </div>
+        <ul class="options">
+            <li class="correct-answer">a) 0.2</li>
+            <li>b) 0.5</li>
+            <li>c) 2.0</li>
+            <li>d) 5.0</li>
+            <li>e) 8.0</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol6', this)">Show Answer</button>
+        
+        <div id="sol6" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                In clinical trials, RR compares the outcome in the treated group to the outcome in the control group. A value less than 1 indicates the treatment is protective.
+            </div>
+            <div class="formula">
+                Relative Risk (RR) = Incidence in treatment group / Incidence in control group
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                Incidence in treatment = 2%<br>
+                Incidence in control = 10%<br>
+                RR = 2 / 10 = <strong>0.2</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Clinical Trial</span>
+        <div class="question">
+            7. In a clinical trial to prevent stroke, the incidence of stroke in the control group was 15%. The incidence of stroke in the treatment group receiving the new drug was 10%. Calculate the Absolute Risk Reduction (ARR).
+        </div>
+        <ul class="options">
+            <li>a) 1.5%</li>
+            <li class="correct-answer">b) 5%</li>
+            <li>c) 10%</li>
+            <li>d) 25%</li>
+            <li>e) 50%</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol7', this)">Show Answer</button>
+        
+        <div id="sol7" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                <strong>ARR</strong> calculates the simple absolute difference in risk between the control group and the treatment group to show the actual risk removed by the drug.
+            </div>
+            <div class="formula">
+                Absolute Risk Reduction (ARR) = Incidence in control group - Incidence in treatment group
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                ARR = 15% - 10% = <strong>5%</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="mcq-card">
+        <span class="study-type">Clinical Trial</span>
+        <div class="question">
+            8. Using the data from the previous stroke trial, where the Absolute Risk Reduction (ARR) was calculated to be 5% (or 0.05). Calculate the Number Needed to Treat (NNT) to prevent one stroke.
+        </div>
+        <ul class="options">
+            <li>a) 5</li>
+            <li>b) 10</li>
+            <li>c) 15</li>
+            <li class="correct-answer">d) 20</li>
+            <li>e) 50</li>
+        </ul>
+        <button class="btn-solution" onclick="toggleSolution('sol8', this)">Show Answer</button>
+        
+        <div id="sol8" class="solution-box">
+            <div class="explanation">
+                <strong>Why this formula?</strong><br>
+                <strong>NNT</strong> is a clinical metric. It tells the physician exactly how many patients must be treated with the intervention to prevent one additional bad outcome.
+            </div>
+            <div class="formula">
+                Number Needed to Treat (NNT) = 1 / ARR
+            </div>
+            <div class="explanation">
+                <strong>Calculation:</strong><br>
+                ARR = 0.05<br>
+                NNT = 1 / 0.05 = <strong>20</strong>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const allOptions = document.querySelectorAll('.options li');
+
+    allOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const parentList = this.parentElement;
+            
+            if (parentList.classList.contains('answered')) {
+                parentList.classList.remove('answered');
+                const children = parentList.querySelectorAll('li');
+                children.forEach(child => {
+                    child.classList.remove('correct');
+                    child.classList.remove('wrong');
+                });
+            } else {
+                parentList.classList.add('answered');
+                if (this.classList.contains('correct-answer')) {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('wrong');
+                    const correctAnswer = parentList.querySelector('.correct-answer');
+                    if (correctAnswer) {
+                        correctAnswer.classList.add('correct');
+                    }
+                }
+            }
+        });
+    });
+
+    function toggleSolution(id, btnElement) {
+        const solutionBox = document.getElementById(id);
+        
+        if (solutionBox.classList.contains('active')) {
+            solutionBox.classList.remove('active');
+            btnElement.textContent = 'Show Answer';
+            btnElement.style.backgroundColor = '#596A7A';
+        } else {
+            solutionBox.classList.add('active');
+            btnElement.textContent = 'Hide Answer';
+            btnElement.style.backgroundColor = '#2C3E50';
+        }
+    }
+</script>
+
+</body>
+</html>
